@@ -1,6 +1,27 @@
+import { useState } from "react";
 import { TbFidgetSpinner } from "react-icons/tb"
 
-const AddPlantForm = ({ handleSubmit, uploadName, setUploadName, loading }) => {
+const AddPlantForm = ({ handleSubmit, image, setImage, loading }) => {
+  const [changeName, setChangeName] = useState('Upload Image')
+  const [size, setSize] = useState('')
+  const [imageName, setImageName] = useState('')
+
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]; // Get the first selected file
+    setChangeName('Change Image')
+    setSize(file.size)
+    setImageName(file.name)
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result); // Update the image state with the file's data URL
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  };
+
+
   return (
     <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
       <form onSubmit={handleSubmit}>
@@ -90,7 +111,7 @@ const AddPlantForm = ({ handleSubmit, uploadName, setUploadName, loading }) => {
                   <label>
                     <input
                       className='text-sm cursor-pointer w-36 hidden'
-                      onChange={(e) => setUploadName(e.target.files[0].name)}
+                      onChange={handleImageChange}
                       type='file'
                       name='image'
                       id='image'
@@ -98,11 +119,20 @@ const AddPlantForm = ({ handleSubmit, uploadName, setUploadName, loading }) => {
                       hidden
                     />
                     <div className='bg-lime-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-lime-500'>
-                      {uploadName}
+                      {changeName}
                     </div>
                   </label>
                 </div>
               </div>
+              {
+                image &&
+                <div className=" flex items-center gap-5 mt-5">
+                  <img className=" w-20 h-20 object-cover rounded-full" src={image} alt="" />
+                  <div>
+                    <h2><span className=" font-semibold">Name: </span>{imageName} <br /> <span className=" font-semibold">Size:</span> {size} <span className=" font-semibold">kb</span></h2>
+                  </div>
+                </div>
+              }
             </div>
 
             {/* Submit Button */}

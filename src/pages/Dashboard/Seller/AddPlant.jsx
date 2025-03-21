@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AddPlant = () => {
   const { user } = useAuth();
-  const [uploadName, setUploadName] = useState('Upload Photo');
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -24,6 +24,9 @@ const AddPlant = () => {
     const quantity = parseInt(form.quantity.value)
     const image = form.image.files[0]
     const imageUrl = await imageUpload(image)
+
+    // showing the file selected image in display ================>>>>>>>>>>>>>
+    // const fileReader = new FileReader();
 
     /// seller info 
     const sellerInfo = {
@@ -59,7 +62,7 @@ const AddPlant = () => {
       </Helmet>
 
       {/* Form */}
-      <AddPlantForm handleSubmit={handleSubmit} uploadName={uploadName} setUploadName={setUploadName} loading={loading} />
+      <AddPlantForm handleSubmit={handleSubmit} image={image} setImage={setImage} loading={loading} />
     </div>
   )
 }
