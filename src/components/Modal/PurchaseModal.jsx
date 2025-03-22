@@ -7,9 +7,13 @@ import {
   DialogTitle,
 } from '@headlessui/react'
 import { Fragment } from 'react'
+import useAuth from '../../hooks/useAuth'
 
-const PurchaseModal = ({ closeModal, isOpen }) => {
+const PurchaseModal = ({ closeModal, isOpen, data }) => {
   // Total Price Calculation
+  const { user } = useAuth();
+  const { name, price, quantity, category, imageUrl, sellerInfo, description } = data
+
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -45,21 +49,53 @@ const PurchaseModal = ({ closeModal, isOpen }) => {
                   Review Info Before Purchase
                 </DialogTitle>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Plant: Money Plant</p>
+                  <p className='text-sm text-gray-500'>Plant: {name}</p>
                 </div>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Category: Indoor</p>
+                  <p className='text-sm text-gray-500'>Category: {category}</p>
                 </div>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Customer: PH</p>
+                  <p className='text-sm text-gray-500'>Customer: {user?.displayName}</p>
                 </div>
 
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Price: $ 120</p>
+                  <p className='text-sm text-gray-500'>Price: ${price}</p>
                 </div>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Available Quantity: 5</p>
+                  <p className='text-sm text-gray-500'>Available Quantity: {quantity}</p>
                 </div>
+                {/* purchase quantity amount */}
+                <div className='mt-2 flex items-center space-x-2'>
+                  <p className='text-sm text-gray-500'>Quantity:</p>
+                  <input
+                    className='w-full px-4 py-3 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
+                    name='price'
+                    type='number'
+                    placeholder='0'
+                    required
+                    max={quantity}
+                  />
+                </div>
+                {/* Shiping address....... */}
+
+                <div className='mt-2 flex items-center space-x-2'>
+                  <p className='text-sm text-gray-500'>Quantity:</p>
+                  <input
+                    className='w-full px-4 py-3 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
+                    name='address'
+                    type='text'
+                    placeholder='Shiping address...'
+                    required
+                    max={quantity}
+                  />
+                </div>
+
+                {/* Confirm order button */}
+
+                <div className='mt-5 text-end'>
+                  <button className=' btn btn-neutral text-white'>Confirm Order</button>
+                </div>
+
               </DialogPanel>
             </TransitionChild>
           </div>

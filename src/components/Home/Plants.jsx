@@ -10,9 +10,7 @@ const Plants = () => {
     queryFn: async () => {
       const {data} = await axios(`${import.meta.env.VITE_API_URL}/plants`)
       return data
-    },
-    staleTime: 600000, // 10 minutes
-    refetchInterval: 600000 // 10 minutes
+    }
   })
 
   if (isloading) return <p>Loading...</p>

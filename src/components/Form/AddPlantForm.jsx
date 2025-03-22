@@ -117,6 +117,7 @@ const AddPlantForm = ({ handleSubmit, image, setImage, loading }) => {
                       id='image'
                       accept='image/*'
                       hidden
+                      required
                     />
                     <div className='bg-lime-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-lime-500'>
                       {changeName}
