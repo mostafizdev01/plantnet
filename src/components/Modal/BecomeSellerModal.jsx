@@ -6,8 +6,32 @@ import {
   DialogTitle,
   DialogPanel,
 } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
+import useAxiosSecure from '../../hooks/useAxiosSecure'
+import useAuth from '../../hooks/useAuth'
+import toast from 'react-hot-toast'
 const BecomeSellerModal = ({ closeModal, isOpen }) => {
+   const [pendding, setPendding] = useState(false)
+
+  // Secure axios instance for authenticated requests
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+  
+
+  const handleSend = async () => {
+    try {
+      setPendding(true);
+     const {data} = await axiosSecure.patch(`/update-seller/${user?.email}`, { status: 'Requested' })
+     toast.success("Your request has been sent!")
+     closeModal()
+    } catch (error){
+      toast.error(error.response.data)
+    }finally{
+      setPendding(false)
+    }
+  }
+
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
@@ -49,11 +73,11 @@ const BecomeSellerModal = ({ closeModal, isOpen }) => {
                 </div>
                 <hr className='mt-8 ' />
                 <div className='flex mt-2 justify-around'>
-                  <button
+                  <button onClick={handleSend}
                     type='button'
                     className='inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
                   >
-                    Continue
+                    {pendding ? 'Please wait...' : 'Send Request'}
                   </button>
                   <button
                     type='button'
