@@ -10,16 +10,17 @@ import { Fragment, useState } from 'react'
 import useAuth from '../../hooks/useAuth'
 import toast from 'react-hot-toast';
 import { axiosSecure } from '../../hooks/useAxiosSecure';
+import { useNavigate } from 'react-router-dom';
 
-const PurchaseModal = ({ closeModal, isOpen, data }) => {
+const PurchaseModal = ({ closeModal, isOpen, data, refetch }) => {
   // Total Price Calculation
   const { user } = useAuth();
-  const { name, price, quantity, category, imageUrl, sellerInfo, description } = data
+  const { name, price, quantity, category, imageUrl, sellerInfo, _id } = data
   const [ordersAddress, setOrdersAddress] = useState('');
   const [orderQuantity, setOrderQuantity] = useState(1);
   const [plantsPrice, setPlantsPrice] = useState(0);
-
-
+  const navigate = useNavigate()
+  console.log(data)
   // Which the order quantity ================>>>>>>>>>>>>
   
   const handleQuantity = value => {
@@ -49,6 +50,7 @@ const PurchaseModal = ({ closeModal, isOpen, data }) => {
       email: user?.email,
       photo: user?.photoURL
     },
+    plantId: _id,
     name,
     category,
     imageUrl,
@@ -63,10 +65,13 @@ const PurchaseModal = ({ closeModal, isOpen, data }) => {
   // post the orders data in database==============>>>>>>>>>>>>>>>>>>>>
 
   const handlePurchase = async () => {
-    console.log(ordersInfo);
     try{
       await axiosSecure.post('/order', ordersInfo)
+      // decrease the quantity from the plants collection
+      await axiosSecure.patch(`/plants/quantity/${_id}`, {quantityToUpdate: orderQuantity})
       toast.success("Your order has been successfully!");
+      refetch(); // refresh the plants list
+      navigate('/dashboard/my-orders') // go to orders page after purchase
     }catch(err){
       console.error(err)
       toast.error("Failed to purchase!");
